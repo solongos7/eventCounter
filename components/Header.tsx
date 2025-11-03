@@ -8,10 +8,10 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ eventName, isEventOver }) => {
   return (
     <header className="flex flex-col items-center gap-4">
-      <div className="bg-slate-700/50 backdrop-blur-sm rounded-xl shadow-2xl border border-white/10 px-8 py-4">
+      <div className="bg-slate-700/50 backdrop-blur-sm rounded-xl shadow-2xl border border-white/10 px-4 sm:px-8 py-4">
         <h1 
-          className="font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 whitespace-nowrap"
-          style={{ fontSize: 'clamp(2.5rem, 8vw, 4.5rem)' }}
+          className="font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center sm:whitespace-nowrap"
+          style={{ fontSize: 'clamp(1.8rem, 7vw, 4.5rem)' }}
         >
           {eventName ? eventName : '행사 시작 카운트다운'}
         </h1>
