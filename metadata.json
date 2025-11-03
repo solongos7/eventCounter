@@ -1,0 +1,5 @@
+{
+  "name": "Event Countdown Timer",
+  "description": "A visually appealing countdown timer that displays the time remaining until a specified event starts. It shows days, hours, minutes, and seconds.",
+  "requestFramePermissions": []
+}
