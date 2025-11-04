@@ -1,5 +1,5 @@
 {
-  "name": "Event Countdown Timer",
-  "description": "A visually appealing countdown timer that displays the time remaining until a specified event starts. It shows days, hours, minutes, and seconds.",
+  "name": "이벤트 카운트다운 타이머",
+  "description": "지정된 이벤트가 시작될 때까지 남은 시간을 표시하는 시각적으로 매력적인 카운트다운 타이머입니다. 일, 시간, 분, 초 단위로 표시됩니다.",
   "requestFramePermissions": []
 }

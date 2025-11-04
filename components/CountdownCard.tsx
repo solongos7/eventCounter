@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface CountdownCardProps {
   value: number;
@@ -10,60 +10,55 @@ const AnimatedDigit = ({ animateTo }: { animateTo: string }) => {
   const [currentDigit, setCurrentDigit] = useState(animateTo);
   const [previousDigit, setPreviousDigit] = useState(animateTo);
   const [isFlipping, setIsFlipping] = useState(false);
-  const timeoutIdRef = useRef<number | null>(null);
 
-
-  // When the target digit changes, trigger the flip animation
   useEffect(() => {
     if (currentDigit !== animateTo) {
-      // If there's an existing animation timeout, clear it.
-      // This prevents the animation from being cut short if the digit changes again quickly.
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current);
-      }
-      
+      // The current digit is about to be replaced, so it becomes the "previous" one for the animation.
       setPreviousDigit(currentDigit);
-      setCurrentDigit(animateTo);
+      // Start the flipping animation.
       setIsFlipping(true);
-
-      // Set a new timeout to remove the flipping class after the animation completes.
-      timeoutIdRef.current = window.setTimeout(() => {
-        setIsFlipping(false);
-        timeoutIdRef.current = null;
-      }, 600); // This duration must match the CSS animation duration.
     }
   }, [animateTo, currentDigit]);
 
-  // Cleanup on unmount to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current);
-      }
-    };
-  }, []);
+  const handleAnimationEnd = () => {
+    // Once the animation is complete, update the current digit to the new target value.
+    setCurrentDigit(animateTo);
+    // Stop the animation state.
+    setIsFlipping(false);
+  };
 
   return (
     <div className="flip-digit">
-      {/* Static top half of the new digit, always visible */}
+      {/* Static top half. Before flip, shows current. During flip, shows the NEW digit underneath the flipper. */}
       <div className="digit-top">
-        <span>{currentDigit}</span>
+        <span>{isFlipping ? animateTo : currentDigit}</span>
       </div>
-      {/* Bottom half: shows previous digit during flip, current digit otherwise */}
+      
+      {/* 
+        Static bottom half.
+        When flipping, it shows the PREVIOUS digit and gets covered by the flipper.
+        When not flipping, it shows the CURRENT stable digit.
+        This prevents the "pop" at the end of the animation, as the content doesn't change
+        at the same time the flipper disappears. The flipper's bottom half (with the new digit)
+        provides the final visual state.
+      */}
       <div className="digit-bottom">
         <span>{isFlipping ? previousDigit : currentDigit}</span>
       </div>
-      {/* The animated flipping element */}
-      <div className={`flipper ${isFlipping ? 'flipping' : ''}`}>
-        {/* The top half of the flipper, shows the old digit and flips down */}
-        <div className="flipper-top">
-          <span>{isFlipping ? previousDigit : currentDigit}</span>
+      
+      {/* The flipper element is only present during the animation. */}
+      {isFlipping && (
+        <div className="flipper flipping" onAnimationEnd={handleAnimationEnd}>
+          {/* Top of flipper, shows the PREVIOUS digit and flips down. */}
+          <div className="flipper-top">
+            <span>{previousDigit}</span>
+          </div>
+          {/* Bottom of flipper, shows the NEW digit, revealed at the end. */}
+          <div className="flipper-bottom">
+            <span>{animateTo}</span>
+          </div>
         </div>
-        {/* The bottom half of the flipper, shows the new digit and is revealed at the end */}
-        <div className="flipper-bottom">
-          <span>{currentDigit}</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
